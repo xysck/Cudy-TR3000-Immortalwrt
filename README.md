@@ -5,16 +5,15 @@
 - 云编译来源：https://github.com/haiibo/OpenWrt
 - 本云编译已打上USB供电补丁
 ## USB供电开关方法
-如果你想关闭USB电源, 需要运行如下命令：
+- 如果你想关闭USB电源, 需要运行如下命令：
 ```bash
 echo 0 > /sys/class/gpio/modem_power/value
 ```
-或运行如下命令，启用USB电源：
+- 或运行如下命令，启用USB电源：
 ```bash
 echo 1 > /sys/class/gpio/modem_power/value
 ```
 ## 感谢
-
 - [Microsoft Azure](https://azure.microsoft.com)
 - [GitHub Actions](https://github.com/features/actions)
 - [OpenWrt](https://github.com/openwrt/openwrt)
@@ -26,5 +25,4 @@ echo 1 > /sys/class/gpio/modem_power/value
 - [peter-evans/repository-dispatch](https://github.com/peter-evans/repository-dispatch)
 
 ## 云编译源
-
 [MIT](https://github.com/P3TERX/Actions-OpenWrt/blob/main/LICENSE) © [**P3TERX**](https://p3terx.com)
