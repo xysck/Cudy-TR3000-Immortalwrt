@@ -8,9 +8,7 @@
 ```bash
 echo 0 > /sys/class/gpio/modem_power/value
 ```
-
-and get the power back by
-
+或运行如下命令，启用USB电源：
 ```bash
 echo 1 > /sys/class/gpio/modem_power/value
 ```
