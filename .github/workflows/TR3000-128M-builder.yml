@@ -12,10 +12,10 @@ concurrency:
 env:
   CCACHE_DIR: /workdir/.ccache
   CCACHE_MAXSIZE: 6G
-  REPO_URL: https://github.com/padavanonly/immortalwrt-mt798x-6.6
+  REPO_URL: https://github.com/weekdaycare/immortalwrt-mt798x-6.6 # 新flash固件测试用
   REPO_BRANCH: openwrt-24.10-6.6
   FEEDS_CONF: feeds.conf.default
-  CONFIG_FILE: config/128M.config
+  CONFIG_FILE: config/128m.config
   DIY_P1_SH: diy/diy-part1.sh
   DIY_P2_SH: diy/diy-part2.sh
   UPLOAD_BIN_DIR: false
@@ -65,6 +65,7 @@ jobs:
 
       - name: ⚙️ Load custom feeds
         run: |
+          set -e
           [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
           chmod +x $DIY_P1_SH
           cd openwrt
@@ -78,6 +79,7 @@ jobs:
 
       - name: 🧩 Load custom configuration
         run: |
+          set -e
           [ -e files ] && mv files openwrt/files
           [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
           chmod +x $DIY_P2_SH
@@ -98,16 +100,12 @@ jobs:
         with:
           path: /workdir/.ccache
           key: ${{ runner.os }}-ccache-${{ env.REPO_BRANCH }}-${{ steps.config-hash.outputs.hash }}
-          restore-keys: |
-            ${{ runner.os }}-ccache-${{ env.REPO_BRANCH }}-${{ steps.config-hash.outputs.hash }}
 
       - name: ⚙️ Setup downloads cache
         uses: actions/cache@v4
         with:
           path: /workdir/openwrt/dl
           key: ${{ runner.os }}-openwrt-dl-${{ env.REPO_BRANCH }}-${{ steps.config-hash.outputs.hash }}
-          restore-keys: |
-            ${{ runner.os }}-openwrt-dl-${{ env.REPO_BRANCH }}-${{ steps.config-hash.outputs.hash }}
 
       - name: 🔧 Configure ccache
         run: |
@@ -204,14 +202,16 @@ jobs:
         id: tag
         if: env.UPLOAD_RELEASE == 'true' && !cancelled()
         run: |
-          RELEASE_TAG=$(date +"%Y.%m.%d-%H%M")
+          FIRMWARE_NAME="128M"
+          BUILD_TIME=$(date +"%Y%m%d-%H%M")
+          RELEASE_TAG="${FIRMWARE_NAME}-${BUILD_TIME}"
           echo "release_tag=$RELEASE_TAG" >> $GITHUB_OUTPUT
 
           # 生成 release 信息
           cat > release.txt << EOF
           ## 📦 OpenWrt Firmware Release
 
-          ** 基于 immortalwrt openwrt 构建的 cudy tr3000 v1 128M 版本固件
+          alwrt openwrt 构建的 cudy tr3000 v1 128M 版本固件
           **🏷️ Release:** $RELEASE_TAG
           **🌿 Branch:** $REPO_BRANCH
           **📱 Device:** $(cat openwrt/DEVICE_NAME 2>/dev/null || echo 'N/A')
@@ -238,6 +238,7 @@ jobs:
           tag_name: ${{ steps.tag.outputs.release_tag }}
           body_path: release.txt
           files: ${{ env.FIRMWARE }}/*sysupgrade.bin
+
       - name: 🚧 Delete old workflow runs
         uses: Mattraks/delete-workflow-runs@v2
         with:
@@ -248,7 +249,7 @@ jobs:
         uses: dev-drprasad/delete-older-releases@v0.3.4
         if: env.UPLOAD_RELEASE == 'true' && !cancelled()
         with:
-          keep_latest: 3
+          keep_latest: 6
           delete_tags: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
