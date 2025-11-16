@@ -16,8 +16,8 @@ env:
   REPO_BRANCH: openwrt-24.10-6.6
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: config/128muboot.config
-  DIY_P1_SH: diy-part1.sh
-  DIY_P2_SH: diy-part2.sh
+  DIY_P1_SH: diy/diy-part1.sh
+  DIY_P2_SH: diy/diy-part2.sh
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_RELEASE: true
@@ -211,6 +211,7 @@ jobs:
           cat > release.txt << EOF
           ## 📦 OpenWrt Firmware Release
 
+          ** 基于 immortalwrt openwrt 构建的 cudy tr3000 v1 Ubootmod 版本固件
           **🏷️ Release:** $RELEASE_TAG
           **🌿 Branch:** $REPO_BRANCH
           **📱 Device:** $(cat openwrt/DEVICE_NAME 2>/dev/null || echo 'N/A')
