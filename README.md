@@ -1,4 +1,5 @@
 ## 项目说明
+编译自 https://github.com/padavanonly/immortalwrt-mt798x-6.6，并兼容 Cudy Tr3000 128M 新的 flash。
 - 设备型号：Cudy TR3000
 - 固件默认管理地址：`192.168.1.1` 默认用户：`root` 默认密码：`password`
 - 源码：https://github.com/padavanonly/immortalwrt-mt798x-6.6
